@@ -5,7 +5,6 @@ import 'package:fluffy_board/dashboard/filemanager/add_offline_whiteboard.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:file_picker_cross/file_picker_cross.dart';
 import 'filemanager/add_ext_whiteboard.dart';
 import 'filemanager/add_whiteboard.dart';
 import 'filemanager/file_manager_types.dart';
@@ -20,13 +19,7 @@ class ActionButtons extends StatefulWidget {
   final Directories directories;
 
   ActionButtons(
-      this.authToken,
-      this.parent,
-      this._refreshController,
-      this.offlineWhiteboards,
-      this.offlineWhiteboardIds,
-      this.online,
-      this.directories);
+      this.authToken, this.parent, this._refreshController, this.offlineWhiteboards, this.offlineWhiteboardIds, this.online, this.directories);
 
   @override
   _ActionButtonsState createState() => _ActionButtonsState();
@@ -34,10 +27,8 @@ class ActionButtons extends StatefulWidget {
 
 class _ActionButtonsState extends State<ActionButtons> {
   final LocalStorage fileManagerStorage = new LocalStorage('filemanager');
-  final LocalStorage fileManagerStorageIndex =
-      new LocalStorage('filemanager-index');
-  final ButtonStyle outlineButtonStyle =
-      OutlinedButton.styleFrom(primary: Colors.white);
+  final LocalStorage fileManagerStorageIndex = new LocalStorage('filemanager-index');
+  final ButtonStyle outlineButtonStyle = OutlinedButton.styleFrom(primary: Colors.white);
 
   @override
   Widget build(BuildContext context) {
@@ -47,43 +38,24 @@ class _ActionButtonsState extends State<ActionButtons> {
           Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: OutlinedButton(
-                  style: outlineButtonStyle,
-                  onPressed: _createWhiteboard,
-                  child: Text(AppLocalizations.of(context)!.createWhiteboard))),
+                  style: outlineButtonStyle, onPressed: _createWhiteboard, child: Text(AppLocalizations.of(context)!.createWhiteboard))),
         Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
             child: OutlinedButton(
-                style: outlineButtonStyle,
-                onPressed: _createOfflineWhiteboard,
-                child: Text(AppLocalizations.of(context)!.createOfflineWhiteboard))),
+                style: outlineButtonStyle, onPressed: _createOfflineWhiteboard, child: Text(AppLocalizations.of(context)!.createOfflineWhiteboard))),
         Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-            child: OutlinedButton(
-                style: outlineButtonStyle,
-                onPressed: _createFolder,
-                child: Text(AppLocalizations.of(context)!.createFolder))),
+            child: OutlinedButton(style: outlineButtonStyle, onPressed: _createFolder, child: Text(AppLocalizations.of(context)!.createFolder))),
         if (widget.online)
           Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: OutlinedButton(
-                  style: outlineButtonStyle,
-                  onPressed: _collabOnWhiteboard,
-                  child: Text(AppLocalizations.of(context)!.collabWhiteboard))),
-        if (widget.online)
-          Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-              child: OutlinedButton(
-                  style: outlineButtonStyle,
-                  onPressed: _importWhiteboard,
-                  child: Text(AppLocalizations.of(context)!.importWhiteboard))),
+                  style: outlineButtonStyle, onPressed: _collabOnWhiteboard, child: Text(AppLocalizations.of(context)!.collabWhiteboard))),
       ],
     );
 
     return Center(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: buttons
-      ),
+      child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: buttons),
     );
   }
 
@@ -91,12 +63,7 @@ class _ActionButtonsState extends State<ActionButtons> {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (BuildContext context) => AddFolder(
-            widget.authToken,
-            widget.parent,
-            widget._refreshController,
-            widget.directories,
-            widget.online),
+        builder: (BuildContext context) => AddFolder(widget.authToken, widget.parent, widget._refreshController, widget.directories, widget.online),
       ),
     );
   }
@@ -105,8 +72,7 @@ class _ActionButtonsState extends State<ActionButtons> {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (BuildContext context) => AddWhiteboard(
-            widget.authToken, widget.parent, widget._refreshController),
+        builder: (BuildContext context) => AddWhiteboard(widget.authToken, widget.parent, widget._refreshController),
       ),
     );
   }
@@ -115,12 +81,8 @@ class _ActionButtonsState extends State<ActionButtons> {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (BuildContext context) => AddOfflineWhiteboard(
-            widget.authToken,
-            widget.parent,
-            widget._refreshController,
-            widget.offlineWhiteboards,
-            widget.offlineWhiteboardIds),
+        builder: (BuildContext context) =>
+            AddOfflineWhiteboard(widget.authToken, widget.parent, widget._refreshController, widget.offlineWhiteboards, widget.offlineWhiteboardIds),
       ),
     );
   }
@@ -129,38 +91,8 @@ class _ActionButtonsState extends State<ActionButtons> {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (BuildContext context) => AddExtWhiteboard(
-            widget.authToken, widget.parent, widget._refreshController),
+        builder: (BuildContext context) => AddExtWhiteboard(widget.authToken, widget.parent, widget._refreshController),
       ),
     );
-  }
-
-  _importWhiteboard() async {
-    List<FilePickerCross> results =
-        await FilePickerCross.importMultipleFromStorage();
-    await fileManagerStorage.ready;
-    await fileManagerStorageIndex.ready;
-    for (FilePickerCross filePickerCross in results) {
-      String json = new String.fromCharCodes(filePickerCross.toUint8List());
-      OfflineWhiteboard offlineWhiteboard =
-          await OfflineWhiteboard.fromJson(jsonDecode(json));
-      offlineWhiteboard.directory = widget.parent;
-      await fileManagerStorage.setItem(
-          "offline_whiteboard-" + offlineWhiteboard.uuid,
-          offlineWhiteboard.toJSONEncodable());
-      Set<String> offlineWhiteboardIds = Set.of([]);
-      try {
-        offlineWhiteboardIds = Set.of(
-            jsonDecode(fileManagerStorageIndex.getItem("indexes"))
-                    .cast<String>() ??
-                []);
-      } catch (ignore) {
-        offlineWhiteboardIds = Set.of([]);
-      }
-      offlineWhiteboardIds.add(offlineWhiteboard.uuid);
-      await fileManagerStorageIndex.setItem(
-          "indexes", jsonEncode(offlineWhiteboardIds.toList()));
-      widget._refreshController.requestRefresh();
-    }
   }
 }

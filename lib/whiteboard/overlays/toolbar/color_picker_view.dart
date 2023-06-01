@@ -1,8 +1,6 @@
 
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluffy_board/utils/screen_utils.dart';
-import 'package:fluffy_board/whiteboard/websocket/websocket_connection.dart';
-import 'package:fluffy_board/whiteboard/websocket/websocket_manager_send.dart';
 import 'package:fluffy_board/whiteboard/overlays/toolbar/draw_options.dart';
 import 'package:fluffy_board/whiteboard/whiteboard-data/scribble.dart';
 import 'package:fluffy_board/whiteboard/whiteboard-data/textitem.dart';
@@ -18,13 +16,11 @@ class ColorPickerView extends StatefulWidget {
   final Toolbar.OnChangedToolbarOptions onChangedToolbarOptions;
   final Scribble? selectedSettingsScribble;
   final TextItem? selectedTextItemScribble;
-  final WebsocketConnection? websocketConnection;
 
   ColorPickerView(
       {required this.toolbarOptions,
       required this.onChangedToolbarOptions,
       required this.selectedSettingsScribble,
-      required this.websocketConnection,
       required this.selectedTextItemScribble});
 
   @override
@@ -78,10 +74,8 @@ class _ColorPickerViewState extends State<ColorPickerView> {
                     if (drawOptions == null) {
                       if (widget.selectedSettingsScribble != null) {
                         widget.selectedSettingsScribble!.color = color;
-                        WebsocketSend.sendScribbleUpdate(widget.selectedSettingsScribble!, widget.websocketConnection);
                       } else if (widget.selectedTextItemScribble != null) {
                         widget.selectedTextItemScribble!.color = color;
-                        WebsocketSend.sendUpdateTextItem(widget.selectedTextItemScribble!, widget.websocketConnection);
                       }
                     } else {
                       drawOptions.colorPresets[drawOptions.currentColor] =

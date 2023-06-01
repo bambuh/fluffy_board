@@ -1,9 +1,7 @@
 import 'package:fluffy_board/utils/screen_utils.dart';
-import 'package:fluffy_board/whiteboard/websocket/websocket_connection.dart';
 import 'package:fluffy_board/whiteboard/whiteboard-data/textitem.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'websocket/websocket_manager_send.dart';
 import 'overlays/toolbar.dart' as Toolbar;
 import 'package:vector_math/vector_math.dart';
 
@@ -12,14 +10,12 @@ class TextsCanvas extends StatefulWidget {
   final Offset offset;
   final Offset sessionOffset;
   final Toolbar.ToolbarOptions toolbarOptions;
-  final WebsocketConnection? websocketConnection;
 
   TextsCanvas(
       {required this.texts,
       required this.offset,
       required this.sessionOffset,
-      required this.toolbarOptions,
-      required this.websocketConnection});
+      required this.toolbarOptions,});
 
   @override
   _TextsCanvasState createState() => _TextsCanvasState();
@@ -60,7 +56,6 @@ class _TextsCanvasState extends State<TextsCanvas> {
             minLines: 3,
             onChanged: (value) {
               textItem.text = value;
-              WebsocketSend.sendUpdateTextItem(textItem, widget.websocketConnection);
             },
             maxLines: null,
             keyboardType: TextInputType.multiline,

@@ -22,35 +22,23 @@ typedef OnDirectorySwitch = Function(Directory?);
 
 class FileActionManager {
   static final LocalStorage settingsStorage = new LocalStorage('settings');
-  static final LocalStorage fileManagerStorageIndex =
-      new LocalStorage('filemanager-index');
-  static final LocalStorage fileManagerStorage =
-      new LocalStorage('filemanager');
+  static final LocalStorage fileManagerStorageIndex = new LocalStorage('filemanager-index');
+  static final LocalStorage fileManagerStorage = new LocalStorage('filemanager');
 
   static var uuid = Uuid();
 
   static _showUploadError(context) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!.errorUploadWhiteboard),
-        backgroundColor: Colors.red));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.errorUploadWhiteboard), backgroundColor: Colors.red));
   }
 
   static _showMoveError(context) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!.errorMovingWhiteboard),
-        backgroundColor: Colors.red));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.errorMovingWhiteboard), backgroundColor: Colors.red));
   }
 
-  static mapDirectories(
-      BuildContext context,
-      bool online,
-      directoryButtons,
-      Directories directories,
-      double fileIconSize,
-      String authToken,
-      String currentDirectory,
-      RefreshController _refreshController,
-      OnDirectorySwitch onDirectorySwitch) {
+  static mapDirectories(BuildContext context, bool online, directoryButtons, Directories directories, double fileIconSize, String authToken,
+      String currentDirectory, RefreshController _refreshController, OnDirectorySwitch onDirectorySwitch) {
     for (Directory directory in directories.list) {
       directoryButtons.add(DragTarget(
         onAccept: (data) async {
@@ -69,10 +57,9 @@ class FileActionManager {
                         child: Column(
                       children: [
                         InkWell(
-                          child: Icon(Icons.folder_open_outlined,
-                              size: fileIconSize),
+                          child: Icon(Icons.folder_open_outlined, size: fileIconSize),
                           onTap: () {
-                            if(_refreshController.isRefresh) return;
+                            if (_refreshController.isRefresh) return;
                             onDirectorySwitch(directory);
 
                             _refreshController.requestRefresh();
@@ -87,14 +74,11 @@ class FileActionManager {
                     PopupMenuButton(
                       itemBuilder: (context) => online
                           ? [
-                              PopupMenuItem(
-                                  child: Text(AppLocalizations.of(context)!.renameFolder), value: 0),
-                              PopupMenuItem(
-                                  child: Text(AppLocalizations.of(context)!.deleteFolder), value: 1),
+                              PopupMenuItem(child: Text(AppLocalizations.of(context)!.renameFolder), value: 0),
+                              PopupMenuItem(child: Text(AppLocalizations.of(context)!.deleteFolder), value: 1),
                             ]
                           : [
-                              PopupMenuItem(
-                                  child: Text(AppLocalizations.of(context)!.renameFolder), value: 0),
+                              PopupMenuItem(child: Text(AppLocalizations.of(context)!.renameFolder), value: 0),
                             ],
                       onSelected: (value) {
                         switch (value) {
@@ -103,17 +87,11 @@ class FileActionManager {
                                 context,
                                 MaterialPageRoute<void>(
                                   builder: (BuildContext context) =>
-                                      RenameFolder(
-                                          authToken,
-                                          directory.id,
-                                          currentDirectory,
-                                          directory.filename,
-                                          _refreshController),
+                                      RenameFolder(authToken, directory.id, currentDirectory, directory.filename, _refreshController),
                                 ));
                             break;
                           case 1:
-                            DeleteManager.deleteFolderDialog(context, directory,
-                                authToken, directories, _refreshController);
+                            DeleteManager.deleteFolderDialog(context, directory, authToken, directories, _refreshController);
                             break;
                         }
                       },
@@ -128,14 +106,8 @@ class FileActionManager {
     }
   }
 
-  static mapBreadCrumbs(
-      BuildContext context,
-      breadCrumbItems,
-      double fontSize,
-      String authToken,
-      OnDirectorySwitch onDirectorySwitch,
-      RefreshController _refreshController,
-      List<Directory> currentDirectoryPath) {
+  static mapBreadCrumbs(BuildContext context, breadCrumbItems, double fontSize, String authToken, OnDirectorySwitch onDirectorySwitch,
+      RefreshController _refreshController, List<Directory> currentDirectoryPath) {
     breadCrumbItems.add(BreadCrumbItem(
         content: DragTarget(onAccept: (data) async {
           await moveWhiteboard(context, data, "", authToken, _refreshController);
@@ -164,8 +136,7 @@ class FileActionManager {
           onTap: () {
             onDirectorySwitch(currentDirectoryPath[i]);
 
-            currentDirectoryPath.removeRange(
-                i + 1, currentDirectoryPath.length);
+            currentDirectoryPath.removeRange(i + 1, currentDirectoryPath.length);
             _refreshController.requestRefresh();
           }));
     }
@@ -202,9 +173,7 @@ class FileActionManager {
                           Navigator.push(
                               context,
                               MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      WhiteboardView(whiteboard, null, null,
-                                          authToken, id, online)));
+                                  builder: (BuildContext context) => WhiteboardView(whiteboard, null, null, authToken, id, online)));
                         },
                       ),
                       Text(
@@ -228,67 +197,28 @@ class FileActionManager {
                             context,
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) =>
-                                  RenameWhiteboard(
-                                      authToken,
-                                      whiteboard.id,
-                                      currentDirectory,
-                                      whiteboard.name,
-                                      _refreshController),
+                                  RenameWhiteboard(authToken, whiteboard.id, currentDirectory, whiteboard.name, _refreshController),
                             ));
                         break;
                       case 1:
-                        DeleteManager.deleteWhiteboardDialog(context,
-                            whiteboard, authToken, _refreshController);
+                        DeleteManager.deleteWhiteboardDialog(context, whiteboard, authToken, _refreshController);
                         break;
                       case 2:
                         Navigator.push(
                             context,
                             MaterialPageRoute<void>(
-                              builder: (BuildContext context) =>
-                                  ShareWhiteboard(
-                                      authToken,
-                                      username,
-                                      whiteboard.id,
-                                      whiteboard.name,
-                                      currentDirectory,
-                                      whiteboard.viewId,
-                                      whiteboard.editId),
+                              builder: (BuildContext context) => ShareWhiteboard(
+                                  authToken, username, whiteboard.id, whiteboard.name, currentDirectory, whiteboard.viewId, whiteboard.editId),
                             ));
                         break;
                       case 3:
-                        OfflineWhiteboard
-                            offlineWhiteboard = new OfflineWhiteboard(
-                                uuid.v4(),
-                                currentDirectory,
-                                whiteboard.name,
-                                await WhiteboardDataManager.getUploads(
-                                    whiteboard.id,
-                                    whiteboard.editId,
-                                    authToken),
-                                await WhiteboardDataManager.getTextItems(
-                                    whiteboard.id,
-                                    whiteboard.editId,
-                                    authToken),
-                                await WhiteboardDataManager.getScribbles(
-                                    whiteboard.id,
-                                    whiteboard.editId,
-                                    authToken),
-                                await WhiteboardDataManager.getBookmarks(
-                                    whiteboard.id,
-                                    whiteboard.editId,
-                                    authToken),
-                          Offset.zero, 1
-                        );
+                        OfflineWhiteboard offlineWhiteboard = new OfflineWhiteboard(uuid.v4(), currentDirectory, whiteboard.name, Offset.zero, 1);
                         offlineWhiteboards.list.add(offlineWhiteboard);
-                       await fileManagerStorage.setItem(
-                            "offline_whiteboard-" + offlineWhiteboard.uuid,
-                            offlineWhiteboard.toJSONEncodable());
-                        for (OfflineWhiteboard offWhi
-                            in offlineWhiteboards.list) {
+                        await fileManagerStorage.setItem("offline_whiteboard-" + offlineWhiteboard.uuid, offlineWhiteboard.toJSONEncodable());
+                        for (OfflineWhiteboard offWhi in offlineWhiteboards.list) {
                           offlineWhiteboardIds.add(offWhi.uuid);
                         }
-                        await fileManagerStorageIndex.setItem("indexes",
-                            jsonEncode(offlineWhiteboardIds.toList()));
+                        await fileManagerStorageIndex.setItem("indexes", jsonEncode(offlineWhiteboardIds.toList()));
                         _refreshController.requestRefresh();
                         break;
                     }
@@ -332,9 +262,7 @@ class FileActionManager {
                           Navigator.push(
                               context,
                               MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      WhiteboardView(null, whiteboard, null,
-                                          authToken, id, online)));
+                                  builder: (BuildContext context) => WhiteboardView(null, whiteboard, null, authToken, id, online)));
                         },
                       ),
                       Text(
@@ -352,41 +280,16 @@ class FileActionManager {
                   onSelected: (value) async {
                     switch (value) {
                       case 0:
-                        DeleteManager.deleteExtWhiteboardDialog(context,
-                            whiteboard, authToken, _refreshController);
+                        DeleteManager.deleteExtWhiteboardDialog(context, whiteboard, authToken, _refreshController);
                         break;
                       case 1:
-                        OfflineWhiteboard offlineWhiteboard =
-                            new OfflineWhiteboard(
-                                uuid.v4(),
-                                currentDirectory,
-                                whiteboard.name,
-                                await WhiteboardDataManager.getUploads(
-                                    whiteboard.original,
-                                    whiteboard.permissionId,
-                                    authToken),
-                                await WhiteboardDataManager.getTextItems(
-                                    whiteboard.original,
-                                    whiteboard.permissionId,
-                                    authToken),
-                                await WhiteboardDataManager.getScribbles(
-                                    whiteboard.original,
-                                    whiteboard.permissionId,
-                                    authToken),
-                                await WhiteboardDataManager.getBookmarks(
-                                    whiteboard.original,
-                                    whiteboard.permissionId,
-                                    authToken), Offset.zero, 1);
+                        OfflineWhiteboard offlineWhiteboard = new OfflineWhiteboard(uuid.v4(), currentDirectory, whiteboard.name, Offset.zero, 1);
                         offlineWhiteboards.list.add(offlineWhiteboard);
-                        await fileManagerStorage.setItem(
-                            "offline_whiteboard-" + offlineWhiteboard.uuid,
-                            offlineWhiteboard.toJSONEncodable());
-                        for (OfflineWhiteboard offWhi
-                            in offlineWhiteboards.list) {
+                        await fileManagerStorage.setItem("offline_whiteboard-" + offlineWhiteboard.uuid, offlineWhiteboard.toJSONEncodable());
+                        for (OfflineWhiteboard offWhi in offlineWhiteboards.list) {
                           offlineWhiteboardIds.add(offWhi.uuid);
                         }
-                        await fileManagerStorageIndex.setItem("indexes",
-                            jsonEncode(offlineWhiteboardIds.toList()));
+                        await fileManagerStorageIndex.setItem("indexes", jsonEncode(offlineWhiteboardIds.toList()));
                         _refreshController.requestRefresh();
                         break;
                     }
@@ -400,22 +303,13 @@ class FileActionManager {
     }
   }
 
-  static mapOfflineWhiteboards(
-      BuildContext context,
-      whiteboardButtons,
-      OfflineWhiteboards offlineWhiteboards,
-      double fileIconSize,
-      String authToken,
-      String id,
-      bool online,
-      RefreshController _refreshController,
-      Set<String> offlineWhiteboardIds) {
+  static mapOfflineWhiteboards(BuildContext context, whiteboardButtons, OfflineWhiteboards offlineWhiteboards, double fileIconSize, String authToken,
+      String id, bool online, RefreshController _refreshController, Set<String> offlineWhiteboardIds) {
     print("Map: " + offlineWhiteboards.list.length.toString());
     for (OfflineWhiteboard whiteboard in offlineWhiteboards.list) {
       whiteboardButtons.add(LongPressDraggable<OfflineWhiteboard>(
         data: whiteboard,
-        feedback:
-            Icon(Icons.download_for_offline_outlined, size: fileIconSize),
+        feedback: Icon(Icons.download_for_offline_outlined, size: fileIconSize),
         child: Column(
           children: [
             Row(
@@ -425,20 +319,12 @@ class FileActionManager {
                   child: Column(
                     children: [
                       InkWell(
-                        child: Icon(Icons.download_for_offline_outlined,
-                            size: fileIconSize),
+                        child: Icon(Icons.download_for_offline_outlined, size: fileIconSize),
                         onTap: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      WhiteboardView(
-                                          null,
-                                          null,
-                                          whiteboard,
-                                          authToken,
-                                          id,
-                                          online)));
+                                  builder: (BuildContext context) => WhiteboardView(null, null, whiteboard, authToken, id, online)));
                         },
                       ),
                       Text(whiteboard.name
@@ -457,27 +343,15 @@ class FileActionManager {
                   onSelected: (value) async {
                     switch (value) {
                       case 0:
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                                builder: (BuildContext context) =>
-                                    RenameOfflineWhiteboard(
-                                        whiteboard, _refreshController)));
+                        Navigator.push(context,
+                            MaterialPageRoute<void>(builder: (BuildContext context) => RenameOfflineWhiteboard(whiteboard, _refreshController)));
                         break;
                       case 1:
-                        DeleteManager.deleteOfflineWhiteboardDialog(
-                            context,
-                            whiteboard,
-                            offlineWhiteboardIds,
-                            authToken,
-                            _refreshController);
+                        DeleteManager.deleteOfflineWhiteboardDialog(context, whiteboard, offlineWhiteboardIds, authToken, _refreshController);
                         break;
                       case 2:
                         http.Response response = await http.post(
-                            Uri.parse(
-                                (settingsStorage.getItem("REST_API_URL") ??
-                                        dotenv.env['REST_API_URL']!) +
-                                    "/filemanager/whiteboard/create"),
+                            Uri.parse((settingsStorage.getItem("REST_API_URL") ?? dotenv.env['REST_API_URL']!) + "/filemanager/whiteboard/create"),
                             headers: {
                               "content-type": "application/json",
                               "accept": "application/json",
@@ -488,16 +362,11 @@ class FileActionManager {
                               'directory': whiteboard.directory,
                               'password': "",
                             }));
-                        CreateWhiteboardResponse createWhiteboardResponse =
-                            CreateWhiteboardResponse.fromJson(
-                                jsonDecode(response.body));
+                        CreateWhiteboardResponse createWhiteboardResponse = CreateWhiteboardResponse.fromJson(jsonDecode(response.body));
                         if (response.statusCode == 200) {
                           whiteboard.uuid = createWhiteboardResponse.id;
                           http.Response response = await http.post(
-                              Uri.parse(
-                                  (settingsStorage.getItem("REST_API_URL") ??
-                                          dotenv.env['REST_API_URL']!) +
-                                      "/offline-whiteboard/import"),
+                              Uri.parse((settingsStorage.getItem("REST_API_URL") ?? dotenv.env['REST_API_URL']!) + "/offline-whiteboard/import"),
                               headers: {
                                 "content-type": "application/json",
                                 "accept": "application/json",
@@ -516,15 +385,12 @@ class FileActionManager {
                         break;
                       case 3:
                         await FileSaver.instance.saveFile(
-                            "FluffyBoard-" + whiteboard.name,
-                            Uint8List.fromList(
-                                jsonEncode(whiteboard.toJSONEncodable())
-                                    .codeUnits),
-                            "json");
+                          name: "FluffyBoard-" + whiteboard.name,
+                          bytes: Uint8List.fromList(jsonEncode(whiteboard.toJSONEncodable()).codeUnits),
+                          ext: "json",
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                                AppLocalizations.of(context)!.downloadedWhiteboardDownloadsFolder),
-                            backgroundColor: Colors.green));
+                            content: Text(AppLocalizations.of(context)!.downloadedWhiteboardDownloadsFolder), backgroundColor: Colors.green));
                         break;
                     }
                   },
@@ -541,19 +407,17 @@ class FileActionManager {
     if (data is Whiteboard) {
       Whiteboard whiteboard = data;
       whiteboard.parent = directoryUuid;
-      http.Response response = await http.post(
-          Uri.parse((settingsStorage.getItem("REST_API_URL") ??
-                  dotenv.env['REST_API_URL']!) +
-              "/filemanager/whiteboard/move"),
-          headers: {
-            "content-type": "application/json",
-            "accept": "application/json",
-            'Authorization': 'Bearer ' + authToken,
-          },
-          body: jsonEncode({
-            'id': whiteboard.id,
-            'directory': directoryUuid,
-          }));
+      http.Response response =
+          await http.post(Uri.parse((settingsStorage.getItem("REST_API_URL") ?? dotenv.env['REST_API_URL']!) + "/filemanager/whiteboard/move"),
+              headers: {
+                "content-type": "application/json",
+                "accept": "application/json",
+                'Authorization': 'Bearer ' + authToken,
+              },
+              body: jsonEncode({
+                'id': whiteboard.id,
+                'directory': directoryUuid,
+              }));
       if (response.statusCode == 200) {
         _refreshController.requestRefresh();
       } else {
@@ -562,19 +426,17 @@ class FileActionManager {
     } else if (data is ExtWhiteboard) {
       ExtWhiteboard whiteboard = data;
       whiteboard.directory = directoryUuid;
-      http.Response response = await http.post(
-          Uri.parse((settingsStorage.getItem("REST_API_URL") ??
-                  dotenv.env['REST_API_URL']!) +
-              "/filemanager-ext/whiteboard/move"),
-          headers: {
-            "content-type": "application/json",
-            "accept": "application/json",
-            'Authorization': 'Bearer ' + authToken,
-          },
-          body: jsonEncode({
-            'id': whiteboard.id,
-            'directory': directoryUuid,
-          }));
+      http.Response response =
+          await http.post(Uri.parse((settingsStorage.getItem("REST_API_URL") ?? dotenv.env['REST_API_URL']!) + "/filemanager-ext/whiteboard/move"),
+              headers: {
+                "content-type": "application/json",
+                "accept": "application/json",
+                'Authorization': 'Bearer ' + authToken,
+              },
+              body: jsonEncode({
+                'id': whiteboard.id,
+                'directory': directoryUuid,
+              }));
       if (response.statusCode == 200) {
         _refreshController.requestRefresh();
       } else {
@@ -583,25 +445,22 @@ class FileActionManager {
     } else if (data is OfflineWhiteboard) {
       OfflineWhiteboard whiteboard = data;
       whiteboard.directory = directoryUuid;
-      await fileManagerStorage.setItem("offline_whiteboard-" + whiteboard.uuid,
-          whiteboard.toJSONEncodable());
+      await fileManagerStorage.setItem("offline_whiteboard-" + whiteboard.uuid, whiteboard.toJSONEncodable());
       _refreshController.requestRefresh();
     } else if (data is Directory) {
       Directory directory = data;
       if (directory.id == directoryUuid) return;
-      http.Response response = await http.post(
-          Uri.parse((settingsStorage.getItem("REST_API_URL") ??
-                  dotenv.env['REST_API_URL']!) +
-              "/filemanager/directory/move"),
-          headers: {
-            "content-type": "application/json",
-            "accept": "application/json",
-            'Authorization': 'Bearer ' + authToken,
-          },
-          body: jsonEncode({
-            'id': directory.id,
-            'parent': directoryUuid,
-          }));
+      http.Response response =
+          await http.post(Uri.parse((settingsStorage.getItem("REST_API_URL") ?? dotenv.env['REST_API_URL']!) + "/filemanager/directory/move"),
+              headers: {
+                "content-type": "application/json",
+                "accept": "application/json",
+                'Authorization': 'Bearer ' + authToken,
+              },
+              body: jsonEncode({
+                'id': directory.id,
+                'parent': directoryUuid,
+              }));
       directory.id = directoryUuid;
       if (response.statusCode == 200) {
         _refreshController.requestRefresh();

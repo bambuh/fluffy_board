@@ -1,13 +1,10 @@
 import 'package:fluffy_board/utils/own_icons_icons.dart';
 import 'package:fluffy_board/whiteboard/infinite_canvas.dart';
-import 'package:fluffy_board/whiteboard/websocket/websocket_connection.dart';
 import 'package:fluffy_board/whiteboard/overlays/toolbar/figure_toolbar.dart';
 import 'package:fluffy_board/whiteboard/overlays/toolbar/pencil_toolbar.dart';
 import 'package:fluffy_board/whiteboard/overlays/toolbar/settings-toolbar/scribble_settings.dart';
-import 'package:fluffy_board/whiteboard/overlays/toolbar/settings-toolbar/upload_settings.dart';
 import 'package:fluffy_board/whiteboard/overlays/toolbar/straight_line_toolbar.dart';
 import 'package:fluffy_board/whiteboard/overlays/toolbar/text_toolbar.dart';
-import 'package:fluffy_board/whiteboard/overlays/toolbar/upload_toolbar.dart';
 import 'package:fluffy_board/whiteboard/overlays/zoom.dart';
 import 'package:fluffy_board/whiteboard/whiteboard-data/scribble.dart';
 import 'package:fluffy_board/whiteboard/whiteboard-data/textitem.dart';
@@ -34,7 +31,6 @@ enum SelectedTool {
   straightLine,
   text,
   figure,
-  upload,
   background
 }
 
@@ -54,7 +50,6 @@ class ToolbarOptions {
   Scribble? settingsSelectedScribble;
   Upload? settingsSelectedUpload;
   TextItem? settingsSelectedTextItem;
-  WebsocketConnection? websocketConnection;
 
   ToolbarOptions(
       this.selectedTool,
@@ -67,7 +62,7 @@ class ToolbarOptions {
       this.backgroundOptions,
       this.colorPickerOpen,
       this.settingsSelected,
-      this.websocketConnection);
+      );
 }
 
 class Toolbar extends StatefulWidget {
@@ -81,7 +76,6 @@ class Toolbar extends StatefulWidget {
   final OnScribblesChange onScribblesChange;
   final OnUploadsChange onUploadsChange;
   final OnTextItemsChange onTextItemsChange;
-  final WebsocketConnection? websocketConnection;
   final List<TextItem> texts;
   final OnSaveOfflineWhiteboard onSaveOfflineWhiteboard;
   final String toolbarLocation;
@@ -96,7 +90,6 @@ class Toolbar extends StatefulWidget {
       required this.scribbles,
       required this.onScribblesChange,
       required this.onUploadsChange,
-      required this.websocketConnection,
       required this.texts,
       required this.onTextItemsChange,
       required this.onSaveOfflineWhiteboard,
@@ -270,26 +263,9 @@ class _ToolbarState extends State<Toolbar> {
             })
           },
         );
-      case SelectedTool.upload:
-        return UploadToolbar(
-          axis: axis,
-          websocketConnection: widget.websocketConnection,
-          uploads: widget.uploads,
-          zoomOptions: widget.zoomOptions,
-          toolbarOptions: widget.toolbarOptions,
-          onChangedToolbarOptions: (toolbarOptions) => {
-            setState(() {
-              widget.onChangedToolbarOptions(toolbarOptions);
-            })
-          },
-          offset: widget.offset,
-          onSaveOfflineWhiteboard: () => widget.onSaveOfflineWhiteboard(),
-          sessionOffset: widget.offset,
-        );
       case SelectedTool.text:
         return TextToolbar(
           axis: axis,
-          websocketConnection: widget.websocketConnection,
           toolbarOptions: widget.toolbarOptions,
           onChangedToolbarOptions: (toolbarOptions) => {
             setState(() {
@@ -321,7 +297,6 @@ class _ToolbarState extends State<Toolbar> {
           zoomOptions: widget.zoomOptions,
           axis: axis,
           onSaveOfflineWhiteboard: () => widget.onSaveOfflineWhiteboard(),
-          websocketConnection: widget.websocketConnection,
           toolbarOptions: widget.toolbarOptions,
           selectedScribble: widget.toolbarOptions.settingsSelectedScribble,
           onChangedToolbarOptions: (toolbarOptions) {
@@ -343,35 +318,10 @@ class _ToolbarState extends State<Toolbar> {
           scribbles: widget.scribbles,
         );
       case SettingsSelected.image:
-        return UploadSettings(
-          axis: axis,
-          onSaveOfflineWhiteboard: () => widget.onSaveOfflineWhiteboard(),
-          websocketConnection: widget.websocketConnection,
-          selectedUpload: widget.toolbarOptions.settingsSelectedUpload,
-          toolbarOptions: widget.toolbarOptions,
-          onChangedToolbarOptions: (toolbarOptions) {
-            setState(() {
-              widget.onChangedToolbarOptions(toolbarOptions);
-            });
-          },
-          uploads: widget.uploads,
-          onUploadsChange: (uploads) {
-            setState(() {
-              widget.onUploadsChange(uploads);
-              if (!uploads
-                  .contains(widget.toolbarOptions.settingsSelectedUpload)) {
-                widget.toolbarOptions.settingsSelectedUpload = null;
-                widget.toolbarOptions.settingsSelected = SettingsSelected.none;
-                widget.onChangedToolbarOptions(widget.toolbarOptions);
-              }
-            });
-          },
-        );
       case SettingsSelected.text:
         return TextItemSettings(
           axis: axis,
           onSaveOfflineWhiteboard: () => widget.onSaveOfflineWhiteboard(),
-          websocketConnection: widget.websocketConnection,
           selectedTextItem: widget.toolbarOptions.settingsSelectedTextItem,
           toolbarOptions: widget.toolbarOptions,
           onChangedToolbarOptions: (toolbarOptions) {
@@ -398,7 +348,6 @@ class _ToolbarState extends State<Toolbar> {
   Widget _openColorPicker() {
     if (widget.toolbarOptions.colorPickerOpen)
       return ColorPickerView(
-        websocketConnection: widget.websocketConnection,
         selectedSettingsScribble:
             widget.toolbarOptions.settingsSelectedScribble,
         toolbarOptions: widget.toolbarOptions,

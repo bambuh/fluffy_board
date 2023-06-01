@@ -1,9 +1,6 @@
-import 'package:fluffy_board/dashboard/web_dav_settings.dart';
 import 'package:fluffy_board/documentation/file_manager_introduction.dart';
 import 'package:flutter/material.dart';
 
-import 'account/login.dart';
-import 'account/register.dart';
 import 'dashboard/dashboard.dart';
 import 'dashboard/edit_account.dart';
 import 'dashboard/server_settings.dart';
@@ -22,16 +19,18 @@ class FluffyboardApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return buildMaterialApp('/about', context);
+    return buildMaterialApp('/dashboard', context);
     // return buildMaterialApp('/login', context);
   }
 }
 
 var lightThemeData = new ThemeData(
-    brightness: Brightness.light,);
+  brightness: Brightness.light,
+);
 
 var darkThemeData = ThemeData(
-    brightness: Brightness.dark,);
+  brightness: Brightness.dark,
+);
 
 Widget buildMaterialApp(String initialRoute, context) {
   return MaterialApp(
@@ -44,12 +43,8 @@ Widget buildMaterialApp(String initialRoute, context) {
     routes: {
       '/about': (context) => About(),
       '/intro': (context) => FileManagerIntroduction(),
-      '/register': (context) => Register(),
-      '/login': (context) => Login(),
       '/dashboard': (context) => Dashboard(),
       '/edit-account': (context) => EditAccount(),
-      '/server-settings': (context) => ServerSettings(),
-      '/webdav-settings': (context) => WebDavSettings(),
     },
     initialRoute: initialRoute,
   );

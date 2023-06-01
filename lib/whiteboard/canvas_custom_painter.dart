@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:vector_math/vector_math.dart' as vectormath;
 
-import 'appbar/connected_users.dart';
 import 'overlays/toolbar.dart' as Toolbar;
 import 'whiteboard-data/scribble.dart';
 
@@ -29,7 +28,6 @@ class CanvasCustomPainter extends CustomPainter {
   Offset multiSelectStartPosition;
   Offset multiSelectStopPosition;
   Offset? hoverPosition;
-  Set<ConnectedUser> connectedUsers;
   Paint background = Paint();
 
   CanvasCustomPainter(
@@ -46,8 +44,7 @@ class CanvasCustomPainter extends CustomPainter {
       required this.multiSelectMove,
       required this.multiSelectStartPosition,
       required this.multiSelectStopPosition,
-      required this.hoverPosition,
-      required this.connectedUsers}) {
+      required this.hoverPosition,}) {
     background..color = toolbarOptions.backgroundOptions.colorPresets[0];
   }
 
@@ -86,9 +83,6 @@ class CanvasCustomPainter extends CustomPainter {
         canvas, texts, offset, screenSize, scale, true, toolbarOptions);
     PainterUtils.paintScribbles(
         canvas, scribbles, offset, screenSize, scale, true, toolbarOptions);
-
-    PainterUtils.paintCursors(
-        canvas, connectedUsers, offset, screenSize, scale);
 
     if (multiSelect && !multiSelectMove) {
       canvas.drawRect(
@@ -373,28 +367,6 @@ class PainterUtils {
             selectPaint);
       }
       canvas.restore();
-    }
-  }
-
-  static paintCursors(Canvas canvas, Set<ConnectedUser> connectedUsers,
-      Offset offset, Offset screenSize, double scale) {
-    if (settingsStorage.getItem("user-cursors") ?? true) {
-      final icon = OwnIcons.location_arrow;
-      for (ConnectedUser connectedUser in connectedUsers) {
-        TextPainter textPainter = TextPainter(textDirection: TextDirection.ltr);
-        textPainter.text = TextSpan(
-          text: String.fromCharCode(icon.codePoint),
-          style: TextStyle(
-            color: connectedUser.color,
-            fontSize: 16,
-            fontFamily: icon.fontFamily,
-            package: icon
-                .fontPackage, // This line is mandatory for external icon packs
-          ),
-        );
-        textPainter.layout();
-        textPainter.paint(canvas, connectedUser.cursorOffset);
-      }
     }
   }
 }

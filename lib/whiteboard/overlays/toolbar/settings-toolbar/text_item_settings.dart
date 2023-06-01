@@ -1,8 +1,6 @@
 
 import 'package:fluffy_board/utils/own_icons_icons.dart';
 import 'package:fluffy_board/whiteboard/infinite_canvas.dart';
-import 'package:fluffy_board/whiteboard/websocket/websocket_connection.dart';
-import 'package:fluffy_board/whiteboard/websocket/websocket_manager_send.dart';
 import 'package:fluffy_board/whiteboard/whiteboard-data/textitem.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +14,6 @@ class TextItemSettings extends StatefulWidget {
   final OnTextItemsChange onTextItemsChange;
   final Toolbar.ToolbarOptions toolbarOptions;
   final Toolbar.OnChangedToolbarOptions onChangedToolbarOptions;
-  final WebsocketConnection? websocketConnection;
   final OnSaveOfflineWhiteboard onSaveOfflineWhiteboard;
   final Axis axis;
   TextItemSettings(
@@ -25,7 +22,6 @@ class TextItemSettings extends StatefulWidget {
       required this.onChangedToolbarOptions,
       required this.texts,
       required this.onTextItemsChange,
-      required this.websocketConnection,
       required this.onSaveOfflineWhiteboard,
       required this.axis});
 
@@ -54,7 +50,6 @@ class _TextItemSettingsState extends State<TextItemSettings> {
                   },
                   onChangeEnd: (value) {
                     widget.onSaveOfflineWhiteboard();
-                      WebsocketSend.sendUpdateTextItem(widget.selectedTextItem!, widget.websocketConnection);
                   },
                   min: 10,
                   max: 250,
@@ -87,7 +82,6 @@ class _TextItemSettingsState extends State<TextItemSettings> {
                   widget.texts[index] = widget.selectedTextItem!;
                   widget.onTextItemsChange(widget.texts);
                   widget.onSaveOfflineWhiteboard();
-                  WebsocketSend.sendUpdateTextItem(widget.selectedTextItem!, widget.websocketConnection);
                 },
               ),
               OutlinedButton(
@@ -107,7 +101,6 @@ class _TextItemSettingsState extends State<TextItemSettings> {
                       widget.texts.remove(widget.selectedTextItem!);
                       widget.onTextItemsChange(widget.texts);
                       widget.onSaveOfflineWhiteboard();
-                      WebsocketSend.sendTextItemDelete(widget.selectedTextItem!, widget.websocketConnection);
                     });
                   },
                   child: Padding(

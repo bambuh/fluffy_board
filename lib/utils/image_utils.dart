@@ -15,7 +15,7 @@ class ImageUtils {
   static Uint8List rotateImage(Uint8List data, double rotateFactor) {
     Uint8List resizedData = data;
     IMG.Image? img = IMG.decodeImage(data);
-    IMG.Image resized = IMG.copyRotate(img!, rotateFactor);
+    IMG.Image resized = IMG.copyRotate(img!, angle: rotateFactor);
     resizedData = Uint8List.fromList(IMG.encodePng(resized));
     return resizedData;
   }

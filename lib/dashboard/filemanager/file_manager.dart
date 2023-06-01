@@ -1,4 +1,3 @@
-import 'package:fluffy_board/dashboard/filemanager/web_dav_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -155,12 +154,6 @@ class _FileManagerState extends State<FileManager> {
                     this.offlineWhiteboards = offlineWhiteboards;
                   });
                 });
-                if (widget.online)
-                  WebDavManager.startAutomatedUpload(
-                      await WhiteboardDataManager.getAllOfflineWhiteboards(
-                          this.offlineWhiteboardIds),
-                      await WhiteboardDataManager.getAllDirectories(
-                          widget.authToken));
               },
               child: GridView.extent(
                 maxCrossAxisExtent: 200,

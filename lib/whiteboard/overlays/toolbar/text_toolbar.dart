@@ -1,5 +1,4 @@
 import 'package:fluffy_board/utils/own_icons_icons.dart';
-import 'package:fluffy_board/whiteboard/websocket/websocket_connection.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import '../toolbar.dart' as Toolbar;
@@ -48,13 +47,11 @@ class EncodeTextItemOptions {
 class TextToolbar extends StatefulWidget {
   final Toolbar.ToolbarOptions toolbarOptions;
   final Toolbar.OnChangedToolbarOptions onChangedToolbarOptions;
-  final WebsocketConnection? websocketConnection;
   final Axis axis;
 
   TextToolbar(
       {required this.toolbarOptions,
       required this.onChangedToolbarOptions,
-      required this.websocketConnection,
       required this.axis});
 
   @override

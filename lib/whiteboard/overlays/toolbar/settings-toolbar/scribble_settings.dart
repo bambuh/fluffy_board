@@ -1,8 +1,6 @@
 
 import 'package:fluffy_board/utils/own_icons_icons.dart';
 import 'package:fluffy_board/whiteboard/infinite_canvas.dart';
-import 'package:fluffy_board/whiteboard/websocket/websocket_connection.dart';
-import 'package:fluffy_board/whiteboard/websocket/websocket_manager_send.dart';
 import 'package:fluffy_board/whiteboard/overlays/zoom.dart';
 import 'package:fluffy_board/whiteboard/whiteboard-data/scribble.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +15,6 @@ class ScribbleSettings extends StatefulWidget {
   final OnScribblesChange onScribblesChange;
   final Toolbar.ToolbarOptions toolbarOptions;
   final Toolbar.OnChangedToolbarOptions onChangedToolbarOptions;
-  final WebsocketConnection? websocketConnection;
   final OnSaveOfflineWhiteboard onSaveOfflineWhiteboard;
   final Axis axis;
   final ZoomOptions zoomOptions;
@@ -28,7 +25,6 @@ class ScribbleSettings extends StatefulWidget {
       required this.onChangedToolbarOptions,
       required this.scribbles,
       required this.onScribblesChange,
-      required this.websocketConnection,
       required this.onSaveOfflineWhiteboard,
       required this.axis,
         required this.zoomOptions,
@@ -63,9 +59,6 @@ class _ScribbleSettingsState extends State<ScribbleSettings> {
                       },
                       onChangeEnd: (value) {
                         widget.onSaveOfflineWhiteboard();
-                        WebsocketSend.sendScribbleUpdate(
-                            widget.selectedScribble!,
-                            widget.websocketConnection);
                       },
                       min: 1,
                       max: 50,
@@ -145,8 +138,6 @@ class _ScribbleSettingsState extends State<ScribbleSettings> {
                     setState(() {
                       widget.scribbles.remove(widget.selectedScribble!);
                       widget.onSaveOfflineWhiteboard();
-                      WebsocketSend.sendScribbleDelete(
-                          widget.selectedScribble!, widget.websocketConnection);
                       widget.onScribblesChange(widget.scribbles);
                     });
                   },

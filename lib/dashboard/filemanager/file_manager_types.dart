@@ -1,10 +1,5 @@
 import 'dart:ui' as ui;
 
-import 'package:fluffy_board/whiteboard/whiteboard-data/bookmark.dart';
-import 'package:fluffy_board/whiteboard/whiteboard-data/scribble.dart';
-import 'package:fluffy_board/whiteboard/whiteboard-data/textitem.dart';
-import 'package:fluffy_board/whiteboard/whiteboard-data/upload.dart';
-
 class Directory {
   String id, owner, parent, filename;
   int created;
@@ -94,10 +89,6 @@ class OfflineWhiteboard {
   String uuid;
   String directory;
   String name;
-  Uploads uploads;
-  TextItems texts;
-  Scribbles scribbles;
-  Bookmarks bookmarks;
   ui.Offset offset;
   double scale;
 
@@ -106,10 +97,6 @@ class OfflineWhiteboard {
     m['uuid'] = uuid;
     m['directory'] = directory;
     m['name'] = name;
-    m['uploads'] = uploads.toJSONEncodable();
-    m['texts'] = texts.toJSONEncodable();
-    m['scribbles'] = scribbles.toJSONEncodable();
-    m['bookmarks'] = bookmarks.toJSONEncodable();
     m['offset_dx'] = offset.dx;
     m['offset_dy'] = offset.dy;
     m['scale'] = scale;
@@ -121,25 +108,12 @@ class OfflineWhiteboard {
         json['uuid'],
         json['directory'] ?? "",
         json['name'] ?? "ImportError",
-        json['uploads'] != null
-            ? await Uploads.fromJson(json['uploads'])
-            : new Uploads([]),
-        json['texts'] != null
-            ? TextItems.fromJson(json['texts'])
-            : new TextItems([]),
-        json['scribbles'] != null
-            ? Scribbles.fromJson(json['scribbles'])
-            : new Scribbles([]),
-        json['bookmarks'] != null
-            ? Bookmarks.fromJson(json['bookmarks'])
-            : new Bookmarks([]),
       new ui.Offset((json['offset_dx'] ?? 0).toDouble(), (json['offset_dy'] ?? 0).toDouble()),
         (json['scale'] ?? 0).toDouble(),
     );
   }
 
-  OfflineWhiteboard(this.uuid, this.directory, this.name, this.uploads,
-      this.texts, this.scribbles, this.bookmarks, this.offset, this.scale);
+  OfflineWhiteboard(this.uuid, this.directory, this.name, this.offset, this.scale);
 }
 
 class OfflineWhiteboards {

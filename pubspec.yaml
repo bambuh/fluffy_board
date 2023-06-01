@@ -25,62 +25,53 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  intl: ^0.17.0
+  intl: 0.18.0
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  simplify: ^1.0.2
+  cupertino_icons: ^1.0.5
+  simplify: 1.0.2
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  email_validator: ^2.0.1 #NS
-  flutter_pw_validator: ^1.2.1 #NS
-  http: ^0.13.3 #NS
-  flutter_dotenv: ^5.0.0 #NS
-  localstorage: ^4.0.0+1 #NS
+  email_validator: ^2.1.17 #NS
+  flutter_pw_validator: 1.2.1 #NS
+  flutter_dotenv: 5.0.2 #NS
+  localstorage: 4.0.1+2 #NS
   # Dashboard
-  pull_to_refresh: ^2.0.0 #NS
-  flutter_breadcrumb: ^1.0.1 #NS
-  random_color: ^1.0.6-nullsafety
+  pull_to_refresh: 2.0.0 #NS
+  flutter_breadcrumb: 1.0.1 #NS
+  random_color: 1.0.6-nullsafety
   # Share
-  mailto: ^2.0.0 #NS
-  url_launcher: ^6.0.6 #NS
+  url_launcher: 6.1.11 #NS
   # Math
-  smoothie: ^0.3.0+1 #NS
+  smoothie: 0.3.0+1 #NS
   # smoothing: ^0.0.1 #No NS
   # calculess: ^1.0.2
   # Toolbar
-  flex_color_picker: ^2.0.2 #NS
+  flex_color_picker: ^3.2.2 #NS
   # Canvas
-  vector_math: ^2.1.0 #NS
-  path_icon: ^0.7.0 #NS
+  vector_math: 2.1.4 #NS
+  path_icon: 0.7.2 #NS
   # Upload
-  file_picker_cross: ^4.4.2 #NS
-  printing: ^5.4.3 #NS
-  pdf: ^3.4.2 #NS
-  sleek_circular_slider: ^2.0.1
+  # file_picker_cross: 4.6.0 #NS
+  # file_picker: 5.3.2 #NS
+  pdf: 3.10.4 #NS
+  sleek_circular_slider: 2.0.1
   #Export:
-  file_saver: ^0.0.9 #NS
+  file_saver: 0.2.4 #NS
   # Server Connection
-  uuid: ^3.0.4 #NS
-  web_socket_channel: ^2.1.0 #NS
+  uuid: 3.0.7 #NS
   # Documentation
-  introduction_screen: ^2.1.0 #NS
-  flutter_launcher_icons: ^0.9.0 #NS
+  introduction_screen: 2.1.0 #NS
+  flutter_launcher_icons: 0.13.1 #NS
   # About
   animated_text_kit: ^4.2.1 #NS
   # Fonts
-  google_fonts: ^2.1.0 #NS
-  # Cross Platform
-  universal_html: ^2.0.8 #NS
-  merge_images: ^2.0.0-nullsafety #NS
+  google_fonts: ^4.0.0 #NS
+  merge_images: 2.0.0-nullsafety #NS
   # Theming
-  easy_dynamic_theme: ^2.2.0 #NS
-  # WebDav Sync
-  webdav_client: ^1.0.0
+  easy_dynamic_theme: 2.2.0 #NS
 
 #   App Icons
 flutter_icons:

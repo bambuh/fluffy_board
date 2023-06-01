@@ -21,13 +21,15 @@ class Dashboard extends StatefulWidget {
           child: SingleChildScrollView(
         child: Column(
           children: [
-            isDarkModeOn ? Image.asset(
-              "assets/images/FluffyBoardIconDark.png",
-              height: 300,
-            ) : Image.asset(
-              "assets/images/FluffyBoardIcon.png",
-              height: 300,
-            ),
+            isDarkModeOn
+                ? Image.asset(
+                    "assets/images/FluffyBoardIconDark.png",
+                    height: 300,
+                  )
+                : Image.asset(
+                    "assets/images/FluffyBoardIcon.png",
+                    height: 300,
+                  ),
             CircularProgressIndicator(),
           ],
         ),
@@ -56,8 +58,7 @@ class _DashboardState extends State<Dashboard> {
           setState(() {
             accountStorage.ready.then((value) => {_setStorageReady()});
             introStorage.ready.then((value) => {_setIntroStorageReady()});
-            settingsStorage.ready
-                .then((value) => {print("Settingstorage is ready")});
+            settingsStorage.ready.then((value) => {print("Settingstorage is ready")});
           })
         });
   }
@@ -68,25 +69,13 @@ class _DashboardState extends State<Dashboard> {
     print(checkedLogin);
     print(storageReady);
     print(introStorageReady);
-    if ((!checkedLogin && !storageReady) || !introStorageReady)
-      return (Dashboard.loading(name, context));
-    WidgetsBinding.instance!.addPostFrameCallback((_) => {
-          print("PostframeCallBack"),
-          if (checkedLogin && !loggedIn && online)
-            {
-              print("Switching to login"),
-              Navigator.of(context).pushReplacementNamed('/login')
-            }
-        });
+    if ((!checkedLogin && !storageReady) || !introStorageReady) return (Dashboard.loading(name, context));
     if (!checkedLogin && !loggedIn && online) return (Dashboard.loading(name, context));
     if (introStorage.getItem('read') == null) print("Switching to tutorial");
-    SchedulerBinding.instance!.addPostFrameCallback((_) => {
-          if (checkedLogin && !loggedIn && online)
-            Navigator.of(context).pushNamed('/intro')
-        });
+    SchedulerBinding.instance!.addPostFrameCallback((_) => {if (checkedLogin && !loggedIn && online) Navigator.of(context).pushNamed('/intro')});
     if (introStorage.getItem('read') == null) return (Dashboard.loading(name, context));
 
-    return (FileManager(authToken, username, id, online));
+    return (FileManager(authToken, username, id, false));
   }
 
   _setStorageReady() {
@@ -117,16 +106,13 @@ class _DashboardState extends State<Dashboard> {
     } else {
       try {
         await settingsStorage.ready;
-        http.Response response = await http.get(
-            Uri.parse((settingsStorage.getItem("REST_API_URL") ??
-                    dotenv.env['REST_API_URL']!) +
-                "/account/check"),
-            headers: {
-              "content-type": "application/json",
-              "accept": "application/json",
-              'Authorization': 'Bearer ' + authToken,
-              'Access-Control-Allow-Origin': '*'
-            });
+        http.Response response = await http
+            .get(Uri.parse((settingsStorage.getItem("REST_API_URL") ?? dotenv.env['REST_API_URL']!) + "/account/check"), headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          'Authorization': 'Bearer ' + authToken,
+          'Access-Control-Allow-Origin': '*'
+        });
         setState(() {
           print("Logged in");
           checkedLogin = true;
